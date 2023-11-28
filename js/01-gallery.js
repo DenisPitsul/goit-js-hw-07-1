@@ -18,22 +18,21 @@ const galleryMarkup = galleryItems.map(({preview, original, description}) => {
 
 gallery.insertAdjacentHTML('beforeend', galleryMarkup);
 
-let modal = null;
+let modal = basicLightbox.create('<img src="" width="800" height="600">', {
+    onShow: modal => {
+        window.addEventListener('keydown', onEscapeClick);
+    },
+    onClose: modal => {
+        window.removeEventListener('keydown', onEscapeClick);
+    }
+});
+
 gallery.addEventListener('click', event => {
     event.preventDefault()
     if (event.target.nodeName !== 'IMG')
         return;
 
-    modal = basicLightbox.create(`
-        <img src="${event.target.dataset.source}" width="800" height="600">
-    `, {
-        onShow: instance => {
-            window.addEventListener('keydown', onEscapeClick);
-        },
-        onClose: instance => {
-            window.removeEventListener('keydown', onEscapeClick);
-        }
-    });
+    modal.element().querySelector('img').src = event.target.dataset.source;
     modal.show();
 });
 
