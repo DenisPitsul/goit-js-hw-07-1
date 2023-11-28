@@ -26,15 +26,19 @@ gallery.addEventListener('click', event => {
 
     modal = basicLightbox.create(`
         <img src="${event.target.dataset.source}" width="800" height="600">
-    `);
+    `, {
+        onShow: instance => {
+            window.addEventListener('keydown', onEscapeClick);
+        },
+        onClose: instance => {
+            window.removeEventListener('keydown', onEscapeClick);
+        }
+    });
     modal.show();
-    document.addEventListener('keydown', onEscapeClick);
 });
 
 function onEscapeClick(event) {
     if(event.code !== "Escape")
         return;
-
     modal.close();
-    document.removeEventListener('keydown', onEscapeClick);
 }
